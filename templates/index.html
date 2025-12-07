@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laptop Fiyat Tahmincisi</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px 0;
+        }
+
+        .container-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .main-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            max-width: 600px;
+            width: 100%;
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .header p {
+            font-size: 1rem;
+            opacity: 0.95;
+            margin: 0;
+        }
+
+        .laptop-icon {
+            font-size: 2.5rem;
+        }
+
+        .form-container {
+            padding: 40px 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+        }
+
+        .form-control,
+        .form-select {
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 12px 15px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.15);
+            outline: none;
+        }
+
+        .form-select {
+            cursor: pointer;
+        }
+
+        .form-select option {
+            padding: 10px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn-predict {
+            flex: 1;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-predict:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+
+        .btn-predict:active {
+            transform: translateY(0);
+        }
+
+        .btn-reset {
+            flex: 1;
+            background: #f0f0f0;
+            color: #333;
+            border: 2px solid #e0e0e0;
+            padding: 14px 30px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-reset:hover {
+            background: #e0e0e0;
+            border-color: #999;
+        }
+
+        .result-container {
+            display: none;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 20px;
+            text-align: center;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .result-container.success {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+
+        .result-container.error {
+            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+        }
+
+        .result-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+
+        .result-price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 10px 0;
+        }
+
+        .result-currency {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner-border {
+            color: #667eea;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 576px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .form-container {
+                padding: 20px 15px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+        }
+
+        .icon-input {
+            position: relative;
+        }
+
+        .icon-input i {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #667eea;
+            pointer-events: none;
+        }
+
+        .form-select-icon {
+            padding-right: 40px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-wrapper">
+        <div class="main-container">
+            <div class="header">
+                <h1>
+                    <i class="fas fa-laptop laptop-icon"></i>
+                    Laptop Fiyat Tahmincisi
+                </h1>
+                <p>Laptop özelliklerini girerek tahmini fiyatı öğrenin</p>
+            </div>
+
+            <div class="form-container">
+                <form id="laptopForm" onsubmit="predictPrice(event)">
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label class="form-label" for="brand">
+                                <i class="fas fa-building"></i> Marka
+                            </label>
+                            <select class="form-select form-select-icon" id="brand" name="brand" required>
+                                <option value="">Marka Seçin</option>
+                                <option value="ASUS">ASUS</option>
+                                <option value="DELL">DELL</option>
+                                <option value="Lenovo">Lenovo</option>
+                                <option value="HP">HP</option>
+                                <option value="acer">Acer</option>
+                                <option value="MSI">MSI</option>
+                                <option value="APPLE">Apple</option>
+                                <option value="Avita">Avita</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="processor_brand">
+                                <i class="fas fa-microchip"></i> İşlemci Markası
+                            </label>
+                            <select class="form-select form-select-icon" id="processor_brand" name="processor_brand"
+                                required>
+                                <option value="">İşlemci Markası Seçin</option>
+                                <option value="Intel">Intel</option>
+                                <option value="AMD">AMD</option>
+                                <option value="M1">M1</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="processor_name">
+                            <i class="fas fa-chip"></i> İşlemci Modeli
+                        </label>
+                        <select class="form-select form-select-icon" id="processor_name" name="processor_name" required>
+                            <option value="">İşlemci Modeli Seçin</option>
+                            <option value="Core i5">Core i5</option>
+                            <option value="Core i3">Core i3</option>
+                            <option value="Core i7">Core i7</option>
+                            <option value="Ryzen 5">Ryzen 5</option>
+                            <option value="Ryzen 7">Ryzen 7</option>
+                            <option value="Ryzen 9">Ryzen 9</option>
+                            <option value="Ryzen 3">Ryzen 3</option>
+                            <option value="Celeron Dual">Celeron Dual</option>
+                            <option value="M1">M1</option>
+                            <option value="Pentium Quad">Pentium Quad</option>
+                            <option value="Core i9">Core i9</option>
+                        </select>
+                    </div>
+
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label class="form-label" for="ram_gb">
+                                <i class="fas fa-memory"></i> RAM Kapasitesi
+                            </label>
+                            <select class="form-select form-select-icon" id="ram_gb" name="ram_gb" required>
+                                <option value="">RAM Seçin</option>
+                                <option value="4 GB">4 GB</option>
+                                <option value="8 GB">8 GB</option>
+                                <option value="16 GB">16 GB</option>
+                                <option value="32 GB">32 GB</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="weight">
+                                <i class="fas fa-weight"></i> Ağırlık Kategorisi
+                            </label>
+                            <select class="form-select form-select-icon" id="weight" name="weight" required>
+                                <option value="">Kategori Seçin</option>
+                                <option value="Casual">Casual</option>
+                                <option value="ThinNlight">Thin & Light</option>
+                                <option value="Gaming">Gaming</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label class="form-label" for="ssd">
+                                <i class="fas fa-hdd"></i> SSD Kapasitesi
+                            </label>
+                            <select class="form-select form-select-icon" id="ssd" name="ssd" required>
+                                <option value="">SSD Seçin</option>
+                                <option value="0 GB">0 GB</option>
+                                <option value="128 GB">128 GB</option>
+                                <option value="256 GB">256 GB</option>
+                                <option value="512 GB">512 GB</option>
+                                <option value="1024 GB">1024 GB</option>
+                                <option value="2048 GB">2048 GB</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="hdd">
+                                <i class="fas fa-hdd"></i> HDD Kapasitesi
+                            </label>
+                            <select class="form-select form-select-icon" id="hdd" name="hdd" required>
+                                <option value="">HDD Seçin</option>
+                                <option value="0 GB">0 GB</option>
+                                <option value="512 GB">512 GB</option>
+                                <option value="1024 GB">1024 GB</option>
+                                <option value="2048 GB">2048 GB</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label class="form-label" for="os">
+                                <i class="fas fa-window-maximize"></i> İşletim Sistemi
+                            </label>
+                            <select class="form-select form-select-icon" id="os" name="os" required>
+                                <option value="">İşletim Sistemi Seçin</option>
+                                <option value="Windows">Windows</option>
+                                <option value="Mac">Mac</option>
+                                <option value="DOS">DOS</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="Touchscreen">
+                                <i class="fas fa-hand-pointer"></i> Dokunmatik Ekran
+                            </label>
+                            <select class="form-select form-select-icon" id="Touchscreen" name="Touchscreen" required>
+                                <option value="">Seçin</option>
+                                <option value="No">Hayır</option>
+                                <option value="Yes">Evet</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="msoffice">
+                            <i class="fas fa-file-word"></i> Microsoft Office
+                        </label>
+                        <select class="form-select form-select-icon" id="msoffice" name="msoffice" required>
+                            <option value="">Seçin</option>
+                            <option value="No">Hayır</option>
+                            <option value="Yes">Evet</option>
+                        </select>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="submit" class="btn-predict">
+                            <i class="fas fa-calculator"></i> Fiyat Tahmin Et
+                        </button>
+                        <button type="reset" class="btn-reset">
+                            <i class="fas fa-redo"></i> Temizle
+                        </button>
+                    </div>
+                </form>
+
+                <div class="loading" id="loading">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Yükleniyor...</span>
+                    </div>
+                    <p style="margin-top: 10px; color: #667eea;">Tahmin yapılıyor...</p>
+                </div>
+
+                <div class="result-container" id="resultContainer">
+                    <div class="result-label">Tahmini Laptop Fiyatı:</div>
+                    <div class="result-price" id="resultPrice">₺0.00</div>
+                </div>
+
+                <div class="error-message" id="errorMessage"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        async function predictPrice(event) {
+            event.preventDefault();
+
+            const form = document.getElementById('laptopForm');
+            const formData = new FormData(form);
+            const loading = document.getElementById('loading');
+            const resultContainer = document.getElementById('resultContainer');
+            const errorMessage = document.getElementById('errorMessage');
+
+            // Form verilerini nesneye dönüştür
+            const specs = {
+                brand: formData.get('brand'),
+                processor_brand: formData.get('processor_brand'),
+                processor_name: formData.get('processor_name'),
+                ram_gb: formData.get('ram_gb'),
+                ssd: formData.get('ssd'),
+                hdd: formData.get('hdd'),
+                os: formData.get('os'),
+                weight: formData.get('weight'),
+                Touchscreen: formData.get('Touchscreen'),
+                msoffice: formData.get('msoffice')
+            };
+
+            loading.style.display = 'block';
+            resultContainer.style.display = 'none';
+            errorMessage.style.display = 'none';
+
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(specs)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Sunucu hatası: ' + response.status);
+                }
+
+                const data = await response.json();
+                const price = parseFloat(data.predicted_price);
+
+                // Fiyatı TL formatında göster
+                const formattedPrice = price.toLocaleString('tr-TR', {
+                    style: 'currency',
+                    currency: 'TRY'
+                });
+
+                document.getElementById('resultPrice').textContent = formattedPrice;
+                resultContainer.classList.add('success');
+                resultContainer.style.display = 'block';
+
+            } catch (error) {
+                console.error('Hata:', error);
+                errorMessage.textContent = 'Hata: Tahmini yapılırken bir sorun oluştu. Lütfen tekrar deneyin.';
+                errorMessage.style.display = 'block';
+                resultContainer.classList.remove('success');
+            } finally {
+                loading.style.display = 'none';
+            }
+        }
+
+        // Form sıfırlandığında sonuç gizle
+        document.getElementById('laptopForm').addEventListener('reset', function () {
+            document.getElementById('resultContainer').style.display = 'none';
+            document.getElementById('errorMessage').style.display = 'none';
+        });
+    </script>
+</body>
+
+</html>
