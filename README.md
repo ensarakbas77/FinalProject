@@ -1,7 +1,5 @@
 # 💻 Laptop Price Prediction / Laptop Fiyat Tahmini
-Veri Bilimi ve Makine Öğrenimi 2025: 100 Günlük Kamp uçtan uca mezuniyet projesi.
-
-Modern web arayüzü ile laptop fiyatlarını makine öğrenimi kullanarak tahmin eden bir uygulamadır.
+Veri Bilimi ve Makine Öğrenimi 2025: 100 Günlük Kamp” kapsamında geliştirilen bu proje, veri hazırlama sürecinden modelin dağıtımına kadar tüm aşamaları içeren uçtan uca bir makine öğrenimi uygulamasıdır. Modern bir web arayüzü üzerinden çalışarak laptop fiyatlarını yapay zekâ ile tahmin etmeyi amaçlar.
 
 ## Örnek Resim
 ![alt text](image.png)
